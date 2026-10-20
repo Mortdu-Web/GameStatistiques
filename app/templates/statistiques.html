@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block title %}Statistiques – Game Hub{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('statistiques.static', filename='css/stats.css') }}">
+{% endblock %}
+
+{% block content %}
+{# data-api : racine de l'API, préfixe d'URL inclus (voir URL_PREFIX) #}
+<div class="page stats" data-api="{{ url_for('statistiques.page') }}api">
+
+  <p class="section-tag">Palmarès</p>
+  <h1 class="page-title">Statistiques</h1>
+  <p class="page-lead">
+    Toutes les parties enregistrées dans le hub : vue d’ensemble, classement général,
+    détail par jeu et détail par joueur.
+  </p>
+  <p class="stats-note">
+    Seules les parties dont tous les scores sont enregistrés sont comptées. En cas d’égalité,
+    tous les ex æquo comptent comme 1<sup>ère</sup> place. Selon le jeu, le meilleur score est le plus haut
+    ou le plus bas.
+  </p>
+
+  <!-- Vue d'ensemble -->
+  <section class="stats-section" id="vue-ensemble">
+    <h2 class="stats-h2">Vue d’ensemble</h2>
+    <div class="kpis" id="kpis" hidden></div>
+    <div class="game-tiles" id="parties-par-jeu">
+      <p class="stats-loading">Chargement…</p>
+    </div>
+  </section>
+
+  <!-- Classement général -->
+  <section class="stats-section" id="classement">
+    <h2 class="stats-h2">Classement général</h2>
+    <div class="table-wrapper">
+      <table class="stats-table">
+        <thead>
+          <tr>
+            <th class="col-rank">#</th>
+            <th class="th-left">Joueur</th>
+            <th>Parties</th>
+            <th>1<sup>ère</sup> place</th>
+            <th>% victoires</th>
+            <th>Dernière place</th>
+          </tr>
+        </thead>
+        <tbody id="classement-global-body">
+          <tr><td colspan="6" class="stats-loading">Chargement…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Statistiques par jeu -->
+  <section class="stats-section" id="par-jeu">
+    <h2 class="stats-h2">Statistiques par jeu</h2>
+    <div class="filters">
+      <label class="filter-label" for="select-jeu">Jeu</label>
+      <select id="select-jeu">
+        <option value="">— Sélectionner —</option>
+        {% for jeu in jeux %}
+        <option value="{{ jeu.id }}">{{ jeu.label }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="kpis" id="jeu-extremes" hidden></div>
+
+    <div class="table-wrapper" id="table-jeu-wrap" hidden>
+      <table class="stats-table">
+        <thead>
+          <tr>
+            <th class="col-rank">#</th>
+            <th class="th-left">Joueur</th>
+            <th>Parties</th>
+            <th>1<sup>ère</sup> place</th>
+            <th>% victoires</th>
+            <th>Dernière place</th>
+            <th>Score moyen</th>
+            <th>Score min</th>
+            <th>Score max</th>
+          </tr>
+        </thead>
+        <tbody id="classement-jeu-body"></tbody>
+      </table>
+    </div>
+    <p id="jeu-empty" class="stats-empty" hidden>Aucune partie complète enregistrée pour ce jeu.</p>
+
+    <div class="stats-history" id="jeu-parties-wrap" hidden>
+      <button type="button" class="btn-toggle" id="toggle-jeu-parties" aria-expanded="false" aria-controls="jeu-parties-list">
+        Afficher l’historique des parties
+      </button>
+      <div id="jeu-parties-list" class="parties-list" hidden></div>
+    </div>
+  </section>
+
+  <!-- Statistiques par joueur -->
+  <section class="stats-section" id="par-joueur">
+    <h2 class="stats-h2">Statistiques par joueur</h2>
+    <div class="filters">
+      <label class="filter-label" for="select-joueur">Joueur</label>
+      <select id="select-joueur">
+        <option value="">— Sélectionner —</option>
+        {% for joueur in joueurs %}
+        <option value="{{ joueur.id }}">{{ joueur.prenom }} {{ joueur.nom }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="kpis" id="joueur-totaux" hidden></div>
+
+    <div class="table-wrapper" id="table-joueur-wrap" hidden>
+      <table class="stats-table">
+        <thead>
+          <tr>
+            <th class="th-left">Jeu</th>
+            <th>Parties</th>
+            <th>1<sup>ère</sup> place</th>
+            <th>% victoires</th>
+            <th>Dernière place</th>
+            <th>Score moyen</th>
+            <th>Score min</th>
+            <th>Score max</th>
+          </tr>
+        </thead>
+        <tbody id="stats-joueur-body"></tbody>
+      </table>
+    </div>
+    <p id="joueur-empty" class="stats-empty" hidden>Ce joueur n’a encore aucune partie complète enregistrée.</p>
+    <p id="joueur-hint" class="stats-hint" hidden>Cliquez sur un jeu pour voir le détail de ses parties.</p>
+  </section>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('statistiques.static', filename='js/stats.js') }}" defer></script>
+{% endblock %}

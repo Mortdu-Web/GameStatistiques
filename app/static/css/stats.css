@@ -1,0 +1,102 @@
+/* Page Statistiques — s'appuie sur les variables de site.css (--gold, --line, --muted…). */
+
+.stats-note { font-size: .85rem; color: var(--muted); max-width: 680px; margin: 0 0 8px; }
+.stats-section { margin-top: 56px; }
+.stats-h2 {
+  position: relative;
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 300;
+  font-size: clamp(1.6rem, 3vw, 2.1rem);
+  line-height: 1.2;
+  margin: 0 0 28px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+}
+.stats-h2::after { content: ""; position: absolute; left: 0; bottom: -1px; width: 64px; height: 1px; background: var(--gold); }
+
+.filter-label { font-size: .72rem; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); }
+
+/* ── Indicateurs chiffrés (vue d'ensemble, extrêmes, totaux joueur) ── */
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 16px; margin-bottom: 24px; }
+.kpi { background: var(--surface); border: 1px solid var(--line); padding: 20px 24px; }
+.kpi-value { display: block; font-family: "Cormorant Garamond", serif; font-size: 2.4rem; font-weight: 600; line-height: 1.1; color: var(--accent); }
+.kpi.is-gold .kpi-value { color: var(--gold); }
+.kpi-label { display: block; margin-top: 6px; font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+
+/* ── Tuiles « parties par jeu » (cliquables) ── */
+.game-tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 16px; }
+.game-tile {
+  position: relative; overflow: hidden; display: block; width: 100%;
+  background: var(--surface); border: 1px solid var(--line); padding: 22px 24px;
+  text-align: left; color: inherit; cursor: pointer;
+  transition: transform .3s ease, box-shadow .3s ease;
+}
+.game-tile::before { content: ""; position: absolute; top: 0; left: 0; width: 3px; height: 0; background: var(--gold); transition: height .35s ease; }
+.game-tile:hover, .game-tile:focus-visible { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0, 0, 0, .08); outline: none; }
+.game-tile:hover::before, .game-tile:focus-visible::before { height: 100%; }
+.game-tile-name { display: block; font-family: "Cormorant Garamond", serif; font-size: 1.25rem; font-weight: 600; }
+.game-tile-count { display: block; margin-top: 4px; font-size: .78rem; letter-spacing: .08em; color: var(--muted); }
+.game-tile-count strong { color: var(--gold); font-size: 1rem; }
+.game-tile.is-empty { opacity: .55; }
+
+/* ── Tableaux ── */
+.table-wrapper { overflow-x: auto; border: 1px solid var(--line); background: var(--surface); margin-bottom: 24px; }
+.stats-table { width: 100%; border-collapse: collapse; font-size: .9rem; font-variant-numeric: tabular-nums; }
+.stats-table thead tr { border-bottom: 1px solid var(--line); background: rgba(184, 137, 59, .05); }
+.stats-table th {
+  padding: 14px 18px; text-align: center; white-space: nowrap;
+  font-size: .68rem; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: var(--muted);
+}
+.stats-table td { padding: 12px 18px; text-align: center; border-top: 1px solid var(--line); }
+.stats-table tbody tr:first-child td { border-top: none; }
+.stats-table tbody tr { transition: background .15s; }
+.stats-table tbody tr:hover { background: rgba(184, 137, 59, .05); }
+.stats-table .th-left, .stats-table .td-left { text-align: left; }
+.stats-table .col-rank { width: 56px; padding-right: 0; }
+.stats-table td.col-rank { font-family: "Cormorant Garamond", serif; font-size: 1.1rem; font-weight: 600; color: var(--muted); }
+.stats-table tr.is-first td.col-rank { color: var(--gold); }
+.stats-table td.td-left { font-weight: 500; }
+
+.stats-badge { display: inline-block; min-width: 2em; padding: 1px 8px; font-size: .85rem; }
+.stats-badge.gold { background: rgba(184, 137, 59, .14); color: var(--gold); font-weight: 600; }
+
+/* Nom de joueur cliquable (classement général) */
+.link-btn { background: none; border: 0; padding: 0; font-weight: 500; color: var(--accent); cursor: pointer; text-align: left; }
+.link-btn:hover, .link-btn:focus-visible { color: var(--gold); text-decoration: underline; outline: none; }
+
+.stats-loading, .stats-empty { color: var(--muted); font-style: italic; padding: 12px 0; }
+td.stats-loading, td.stats-empty { text-align: center; padding: 20px; }
+.stats-hint { font-size: .85rem; color: var(--muted); margin: -8px 0 0; }
+
+/* ── Lignes « jeu » dépliables (fiche joueur) ── */
+tr.joueur-jeu-row { cursor: pointer; }
+tr.joueur-jeu-row:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
+tr.joueur-jeu-row td.td-left::before { content: "▸"; display: inline-block; width: 1.2em; color: var(--gold); }
+tr.joueur-jeu-row[aria-expanded="true"] td.td-left::before { content: "▾"; }
+tr.joueur-jeu-detail-row, tr.joueur-jeu-detail-row:hover { background: rgba(184, 137, 59, .04); }
+tr.joueur-jeu-detail-row td { padding: 16px; text-align: left; }
+tr.joueur-jeu-detail-row .parties-list { margin-top: 0; }
+
+/* ── Historique des parties (jeu et joueur) ── */
+.stats-history { margin-top: 24px; }
+.btn-toggle {
+  background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 10px 22px; cursor: pointer;
+  font-size: .78rem; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; transition: all .25s;
+}
+.btn-toggle:hover { background: var(--gold); color: #fff; }
+
+.parties-list { margin-top: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+.partie-card { background: var(--surface); border: 1px solid var(--line); padding: 14px 18px; }
+.partie-card-header { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 8px; font-size: .68rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.partie-scores { list-style: none; margin: 0; padding: 0; }
+.partie-scores li { display: flex; justify-content: space-between; gap: 12px; padding: 4px 0; font-size: .9rem; border-top: 1px solid var(--line); }
+.partie-scores li:first-child { border-top: none; }
+.partie-scores li.is-winner { color: var(--gold); font-weight: 600; }
+.partie-scores li strong { font-variant-numeric: tabular-nums; }
+
+@media (max-width: 640px) {
+  .page { padding: 40px 16px 64px; }
+  .stats-section { margin-top: 44px; }
+  .filters select { width: 100%; min-width: 0; }
+  .stats-table th, .stats-table td { padding: 10px 12px; }
+}
