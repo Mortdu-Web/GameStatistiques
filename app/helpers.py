@@ -14,5 +14,3 @@ else:
         return decorator
 
 
-# Décorateur commun à toutes les vues : utilisateur connecté, et rôle STATS_ROLES s'il est défini.
-stats_access = require_auth(*Config.STATS_ROLES)
